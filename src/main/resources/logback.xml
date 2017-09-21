@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="true" scan="true" scanPeriod="1 minutes">
+    <appender name="PRODUCTION" class="ch.qos.logback.core.FileAppender">
+        <append>false</append>
+        <file>logs/timelog.log</file>
+
+        <encoder>
+            <pattern>%date %level [%thread] %logger{35} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="dk.sunepoulsen.timelog" level="INFO">
+        <appender-ref ref="PRODUCTION"/>
+    </logger>
+
+    <logger name="org.hibernate" level="INFO">
+        <appender-ref ref="PRODUCTION"/>
+    </logger>
+
+</configuration>
