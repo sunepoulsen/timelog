@@ -187,7 +187,8 @@ public class DatabaseStorage {
     }
 
     public void deleteAllData() {
-        transactional( em -> em.createQuery( "DELETE FROM AgreementEntity a" ).executeUpdate() );
+        // transactional( em -> em.createQuery( "DELETE FROM HolidayEntity entity" ).executeUpdate() );
+        // transactional( em -> em.createQuery( "DELETE FROM AgreementEntity entity" ).executeUpdate() );
     }
 
     //-------------------------------------------------------------------------

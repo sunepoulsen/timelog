@@ -14,6 +14,7 @@ import org.junit.Before
 import org.junit.BeforeClass
 import org.junit.Test
 
+import javax.persistence.TypedQuery
 import java.sql.Connection
 import java.sql.DriverManager
 import java.time.LocalDate
@@ -58,14 +59,13 @@ class DatabaseStorageIT {
     }
 
     @Test
-    void addMovieWithArtifact() {
-        AgreementEntity agreementEntity = new AgreementEntity( name: "name", startDate: LocalDate.now() )
-        databaseStorage.persist( agreementEntity )
-
+    void findAgreement() {
         databaseStorage.untransactionalConsumer { em ->
-            AgreementEntity foundAgreement = em.find( AgreementEntity.class, agreementEntity.id )
+            TypedQuery<AgreementEntity> query = em.createQuery( "SELECT a FROM AgreementEntity a WHERE a.name = 'IT Senior Developer'", AgreementEntity.class )
+            List<AgreementEntity> list = query.getResultList()
 
-            assert foundAgreement == agreementEntity
+            assert list != []
+            assert list == [ new AgreementEntity( id: list.get( 0 ).id, name: "IT Senior Developer", startDate: LocalDate.parse( "2016-05-01" ) ) ]
         }
     }
 }

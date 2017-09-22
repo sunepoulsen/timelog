@@ -7,30 +7,27 @@
     <changeSet id="1" author="stp">
         <createSequence cycle="false"
                         incrementBy="50"
-                        sequenceName="agreement_id_seq"
+                        sequenceName="holidays_id_seq"
                         startValue="1"/>
 
-        <createTable tableName="agreements">
-            <column name="agreement_id" type="bigint" autoIncrement="true">
+        <createTable tableName="holidays">
+            <column name="holiday_id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="date" type="date">
+                <constraints nullable="false"/>
             </column>
 
             <column name="name" type="varchar(255)">
                 <constraints nullable="false"/>
             </column>
-
-            <column name="start_date" type="date">
-                <constraints nullable="false"/>
-            </column>
-            <column name="end_date" type="date" />
-
         </createTable>
 
-        <loadData tableName="agreements" file="db/changelog/agreements.csv" separator=";">
-            <column name="agreement_id" type="numeric"/>
+        <loadData tableName="holidays" file="db/changelog/holidays.csv" separator=";">
+            <column name="holiday_id" type="numeric"/>
+            <column name="date" type="date"/>
             <column name="name" type="string"/>
-            <column name="start_date" type="date"/>
-            <column name="end_date" type="date"/>
         </loadData>
     </changeSet>
 
