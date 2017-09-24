@@ -2,7 +2,6 @@ package dk.sunepoulsen.timelog.ui.topcomponents.navigator;
 
 import dk.sunepoulsen.timelog.ui.model.TreeNavigatorModel;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -11,6 +10,7 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
+import lombok.Getter;
 import lombok.extern.slf4j.XSlf4j;
 
 import java.io.IOException;
@@ -21,9 +21,10 @@ import java.io.IOException;
 @XSlf4j
 public class TreeNavigator extends AnchorPane {
     @FXML
-    private TreeView<TreeNavigatorModel> treeView;
+    private TreeView<TreeNavigatorModel> treeView = null;
 
-    private SimpleObjectProperty<TreeNavigatorModel> selectedCollectionProperty;
+    @Getter
+    private SimpleObjectProperty<TreeNavigatorModel> selectedProperty;
 
     public TreeNavigator() {
         FXMLLoader fxmlLoader = new FXMLLoader( getClass().getResource( "treenavigator.fxml" ) );
@@ -49,24 +50,20 @@ public class TreeNavigator extends AnchorPane {
         treeView.getSelectionModel().getSelectedItems().addListener( (ListChangeListener<TreeItem<TreeNavigatorModel>>) c -> {
             ObservableList<? extends TreeItem<TreeNavigatorModel>> list = c.getList();
             if( list.isEmpty() ) {
-                selectedCollectionProperty.setValue( null );
+                selectedProperty.setValue( null );
             }
             else {
                 TreeItem<TreeNavigatorModel> item = list.get( 0 );
-                selectedCollectionProperty.setValue( item.getValue() );
+                selectedProperty.setValue( item.getValue() );
             }
         } );
 
-        selectedCollectionProperty = new SimpleObjectProperty<>();
+        selectedProperty = new SimpleObjectProperty<>();
 
         reload();
     }
 
     public void reload() {
         treeView.setRoot( new RootNode() );
-    }
-
-    public ObservableValue<TreeNavigatorModel> selectedCollectionProperty() {
-        return selectedCollectionProperty;
     }
 }
