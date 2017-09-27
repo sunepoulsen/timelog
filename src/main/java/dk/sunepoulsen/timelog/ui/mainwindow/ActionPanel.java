@@ -1,6 +1,8 @@
 package dk.sunepoulsen.timelog.ui.mainwindow;
 
 import dk.sunepoulsen.timelog.registry.Registry;
+import dk.sunepoulsen.timelog.ui.dialogs.registration.systems.RegistrationSystemDialog;
+import dk.sunepoulsen.timelog.ui.model.registration.systems.RegistrationSystemModel;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,6 +15,7 @@ import lombok.extern.slf4j.XSlf4j;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 /**
@@ -64,10 +67,14 @@ public class ActionPanel extends AnchorPane implements Initializable {
      */
     @FXML
     private void newRegistrationSystem( final ActionEvent event ) {
-        Alert alert = new Alert( Alert.AlertType.INFORMATION, bundle.getString( "action.not.implemented" ) );
-        alert.setHeaderText( "Action: File|New|Registration System" );
+        RegistrationSystemDialog dialog = new RegistrationSystemDialog();
+        Optional<RegistrationSystemModel> model = dialog.showAndWait();
 
-        alert.showAndWait();
+        if( model.isPresent() ) {
+            Alert alert = new Alert( Alert.AlertType.INFORMATION, bundle.getString( "action.not.implemented" ) );
+            alert.setHeaderText( bundle.getString( "mainmenu.file" ) + "|" + bundle.getString( "mainmenu.file.new" ) + "|" + bundle.getString( "mainmenu.file.new.registration.system" ) );
+            alert.show();
+        }
     }
 
 }
