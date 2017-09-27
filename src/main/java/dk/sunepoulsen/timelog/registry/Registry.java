@@ -4,6 +4,13 @@ package dk.sunepoulsen.timelog.registry;
 //-----------------------------------------------------------------------------
 
 import dk.sunepoulsen.timelog.registry.db.DatabaseStorage;
+import javafx.stage.Stage;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.io.IOException;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /**
  * Created by sunepoulsen on 21/10/2016.
@@ -14,8 +21,21 @@ public class Registry {
     //-------------------------------------------------------------------------
 
     public Registry() {
-        this.databaseStorage = new DatabaseStorage();
         this.uiRegistry = new UIRegistry();
+        this.locale = null;
+
+        this.databaseStorage = new DatabaseStorage();
+    }
+
+    public void initialize( final Stage primaryStage ) throws IOException {
+        this.uiRegistry.initialize( primaryStage );
+        this.locale = Locale.getDefault();
+    }
+
+    public void shutdown() {
+        this.uiRegistry.shutdown();
+        this.databaseStorage.disconnect();
+
     }
 
     //-------------------------------------------------------------------------
@@ -26,8 +46,13 @@ public class Registry {
         return databaseStorage;
     }
 
-    public UIRegistry getUIRegistry() {
-        return this.uiRegistry;
+    //-------------------------------------------------------------------------
+    //              Resource Bundles
+    //-------------------------------------------------------------------------
+
+    public <T> ResourceBundle getBundle( Class<T> clazz ) {
+        String baseName = clazz.getName().toLowerCase();
+        return ResourceBundle.getBundle( baseName, locale );
     }
 
     //-------------------------------------------------------------------------
@@ -35,18 +60,24 @@ public class Registry {
     //-------------------------------------------------------------------------
 
     public static Registry getDefault() {
-        if( registry == null ) {
-            registry = new Registry();
+        if( global == null ) {
+            global = new Registry();
         }
 
-        return registry;
+        return global;
     }
 
     //-------------------------------------------------------------------------
     //              Private members
     //-------------------------------------------------------------------------
 
-    private static Registry registry;
+    private static Registry global;
     private DatabaseStorage databaseStorage;
+
+    @Getter
+    @Setter
+    private Locale locale;
+
+    @Getter
     private UIRegistry uiRegistry;
 }

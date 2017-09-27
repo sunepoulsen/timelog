@@ -12,6 +12,9 @@ import java.util.ResourceBundle;
 @XSlf4j
 public class MainWindow implements Initializable {
     @FXML
+    private ActionPanel actionPanel;
+
+    @FXML
     private TreeNavigator navigator;
 
     @FXML

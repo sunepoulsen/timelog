@@ -1,7 +1,6 @@
 package dk.sunepoulsen.timelog.application;
 
 import dk.sunepoulsen.timelog.registry.Registry;
-import dk.sunepoulsen.timelog.registry.UIRegistry;
 import dk.sunepoulsen.timelog.registry.db.DatabaseStorage;
 import dk.sunepoulsen.timelog.ui.mainwindow.MainWindow;
 import javafx.application.Application;
@@ -17,12 +16,12 @@ import java.sql.SQLException;
 
 public class TimelogApplication extends Application {
     private DatabaseStorage storage;
-    private UIRegistry uiRegistry;
+    private Registry registry = Registry.getDefault();
 
     @Override
     public void start( final Stage primaryStage ) throws Exception {
         initializeDatabase();
-        initializeUIRegistry( primaryStage );
+        initializeRegistry( primaryStage );
 
         Parent root = FXMLLoader.load( MainWindow.class.getResource( "mainwindow.fxml" ) );
         Scene scene = new Scene( root );
@@ -40,15 +39,13 @@ public class TimelogApplication extends Application {
         primaryStage.show();
     }
 
-    private void initializeUIRegistry( final Stage primaryStage ) {
-        uiRegistry = Registry.getDefault().getUIRegistry();
-        uiRegistry.setStage( primaryStage );
+    private void initializeRegistry( final Stage primaryStage ) throws IOException {
+        registry.initialize( primaryStage );
     }
 
     @Override
     public void stop() throws Exception {
-        uiRegistry.terminateTaskExecutor();
-        storage.disconnect();
+        registry.shutdown();
         super.stop();
     }
 
@@ -65,7 +62,7 @@ public class TimelogApplication extends Application {
     }
 
     private void initializeDatabase() throws LiquibaseException, SQLException, IOException {
-        storage = Registry.getDefault().getDatabaseStorage();
+        storage = registry.getDatabaseStorage();
         storage.migrate();
         storage.connect();
     }

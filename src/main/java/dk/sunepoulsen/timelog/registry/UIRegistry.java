@@ -1,6 +1,8 @@
 package dk.sunepoulsen.timelog.registry;
 
 import javafx.stage.Stage;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -17,23 +19,11 @@ public class UIRegistry {
         this.taskExecutorService = Executors.newSingleThreadExecutor();
     }
 
-    //-------------------------------------------------------------------------
-    //              Properties
-    //-------------------------------------------------------------------------
-
-    public Stage getStage() {
-        return stage;
+    public void initialize( final Stage primaryStage ) {
+        this.stage = primaryStage;
     }
 
-    public void setStage( final Stage stage ) {
-        this.stage = stage;
-    }
-
-    public ExecutorService getTaskExecutorService() {
-        return taskExecutorService;
-    }
-
-    public void terminateTaskExecutor() {
+    public void shutdown() {
         this.taskExecutorService.shutdownNow();
     }
 
@@ -41,6 +31,10 @@ public class UIRegistry {
     //              Private members
     //-------------------------------------------------------------------------
 
+    @Getter
+    @Setter
     private Stage stage;
+
+    @Getter
     private ExecutorService taskExecutorService;
 }
