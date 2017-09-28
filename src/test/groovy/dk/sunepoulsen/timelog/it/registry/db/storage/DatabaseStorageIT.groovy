@@ -1,7 +1,7 @@
-package dk.sunepoulsen.timelog.it.registry.db
+package dk.sunepoulsen.timelog.it.registry.db.storage
 
-import dk.sunepoulsen.timelog.db.AgreementEntity
-import dk.sunepoulsen.timelog.registry.db.DatabaseStorage
+import dk.sunepoulsen.timelog.db.entities.AgreementEntity
+import dk.sunepoulsen.timelog.db.storage.DatabaseStorage
 import liquibase.Contexts
 import liquibase.LabelExpression
 import liquibase.Liquibase

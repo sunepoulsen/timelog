@@ -1,4 +1,4 @@
-package dk.sunepoulsen.timelog.db;
+package dk.sunepoulsen.timelog.db.entities;
 
 import lombok.Data;
 

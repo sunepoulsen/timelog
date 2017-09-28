@@ -3,7 +3,8 @@ package dk.sunepoulsen.timelog.registry;
 
 //-----------------------------------------------------------------------------
 
-import dk.sunepoulsen.timelog.registry.db.DatabaseStorage;
+import dk.sunepoulsen.timelog.backend.BackendConnection;
+import dk.sunepoulsen.timelog.backend.BackendConnectionException;
 import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,26 +25,19 @@ public class Registry {
         this.uiRegistry = new UIRegistry();
         this.locale = null;
 
-        this.databaseStorage = new DatabaseStorage();
+        this.backendConnection = new BackendConnection();
     }
 
-    public void initialize( final Stage primaryStage ) throws IOException {
+    public void initialize( final Stage primaryStage ) throws IOException, BackendConnectionException {
+        this.backendConnection.connect();
+
         this.uiRegistry.initialize( primaryStage );
         this.locale = Locale.getDefault();
     }
 
     public void shutdown() {
         this.uiRegistry.shutdown();
-        this.databaseStorage.disconnect();
-
-    }
-
-    //-------------------------------------------------------------------------
-    //              Registries
-    //-------------------------------------------------------------------------
-
-    public DatabaseStorage getDatabaseStorage() {
-        return databaseStorage;
+        this.backendConnection.disconnect();
     }
 
     //-------------------------------------------------------------------------
@@ -72,7 +66,9 @@ public class Registry {
     //-------------------------------------------------------------------------
 
     private static Registry global;
-    private DatabaseStorage databaseStorage;
+
+    @Getter
+    private BackendConnection backendConnection;
 
     @Getter
     @Setter

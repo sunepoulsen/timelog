@@ -1,4 +1,4 @@
-package dk.sunepoulsen.timelog.registry.db;
+package dk.sunepoulsen.timelog.db.storage;
 
 import liquibase.Contexts;
 import liquibase.LabelExpression;
@@ -44,6 +44,10 @@ public class DatabaseStorage {
         if( this.emf.isOpen() ) {
             this.emf.close();
         }
+    }
+
+    public boolean isOpen() {
+        return this.emf.isOpen();
     }
 
     public void migrate() throws IOException, SQLException, LiquibaseException {
