@@ -5,9 +5,11 @@ package dk.sunepoulsen.timelog.registry;
 
 import dk.sunepoulsen.timelog.backend.BackendConnection;
 import dk.sunepoulsen.timelog.backend.BackendConnectionException;
+import dk.sunepoulsen.timelog.settings.Settings;
 import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.XSlf4j;
 
 import java.io.IOException;
 import java.util.Locale;
@@ -16,6 +18,7 @@ import java.util.ResourceBundle;
 /**
  * Created by sunepoulsen on 21/10/2016.
  */
+@XSlf4j
 public class Registry {
     //-------------------------------------------------------------------------
     //              Constructors
@@ -24,6 +27,7 @@ public class Registry {
     public Registry() {
         this.uiRegistry = new UIRegistry();
         this.locale = null;
+        this.settings = new Settings();
 
         this.backendConnection = new BackendConnection();
     }
@@ -33,10 +37,21 @@ public class Registry {
 
         this.uiRegistry.initialize( primaryStage );
         this.locale = Locale.getDefault();
+
+        this.settings.loadSettings();
+        this.settings.loadUserStates();
     }
 
     public void shutdown() {
         this.uiRegistry.shutdown();
+
+        try {
+            settings.storeUserStates();
+        }
+        catch( IOException ex ) {
+            log.warn( "Unable to store user states", ex );
+        }
+
         this.backendConnection.disconnect();
     }
 
@@ -73,6 +88,10 @@ public class Registry {
     @Getter
     @Setter
     private Locale locale;
+
+    @Getter
+    @Setter
+    private Settings settings;
 
     @Getter
     private UIRegistry uiRegistry;

@@ -16,11 +16,16 @@ public class TimelogApplication extends Application {
     public void start( final Stage primaryStage ) throws Exception {
         registry.initialize( primaryStage );
 
-        Parent root = FXMLLoader.load( MainWindow.class.getResource( "mainwindow.fxml" ) );
+        FXMLLoader loader = new FXMLLoader( MainWindow.class.getResource( "mainwindow.fxml" ) );
+        Parent root = loader.load();
+        MainWindow mainWindow = loader.getController();
+
         Scene scene = new Scene( root );
 
         primaryStage.setTitle( "TimeLog" );
         primaryStage.setScene( scene );
+        scene.windowProperty().getValue().setOnShown( mainWindow::initializeSplitPaneDividerPosition );
+        scene.windowProperty().getValue().setOnCloseRequest( mainWindow::storeSplitPaneDividerPosition );
 
         // Maximize the window
         final Screen screen = Screen.getPrimary();

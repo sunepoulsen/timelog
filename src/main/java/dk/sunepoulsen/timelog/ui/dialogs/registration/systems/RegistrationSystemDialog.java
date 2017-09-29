@@ -2,7 +2,7 @@ package dk.sunepoulsen.timelog.ui.dialogs.registration.systems;
 
 import dk.sunepoulsen.timelog.registry.Registry;
 import dk.sunepoulsen.timelog.ui.model.registration.systems.RegistrationSystemModel;
-import dk.sunepoulsen.timelog.ui.utils.ControlUtils;
+import dk.sunepoulsen.timelog.utils.ControlUtils;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

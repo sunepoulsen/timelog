@@ -1,4 +1,4 @@
-package dk.sunepoulsen.timelog.ui.utils;
+package dk.sunepoulsen.timelog.utils;
 
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;

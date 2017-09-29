@@ -13,7 +13,7 @@
         <ActionPanel fx:id="actionPanel" />
     </top>
     <center>
-        <SplitPane>
+        <SplitPane fx:id="splitPane">
             <items>
                 <TreeNavigator fx:id="navigator" />
                 <ClientPane fx:id="clientPane" />
