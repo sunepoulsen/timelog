@@ -4,6 +4,7 @@
     <persistence-unit name="timelog-integration-tests" transaction-type="RESOURCE_LOCAL">
         <class>dk.sunepoulsen.timelog.db.entities.AgreementEntity</class>
         <class>dk.sunepoulsen.timelog.db.entities.HolidayEntity</class>
+        <class>dk.sunepoulsen.timelog.db.entities.RegistrationSystemEntity</class>
 
         <properties>
             <property name="javax.persistence.jdbc.driver" value="org.h2.Driver" />

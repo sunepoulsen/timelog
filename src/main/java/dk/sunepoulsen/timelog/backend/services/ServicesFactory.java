@@ -12,4 +12,8 @@ public class ServicesFactory {
     public ServicesFactory( final DatabaseStorage database ) {
         this.database = database;
     }
+
+    public RegistrationSystemsService newRegistrationSystemsService() {
+        return new RegistrationSystemsService( this.database );
+    }
 }

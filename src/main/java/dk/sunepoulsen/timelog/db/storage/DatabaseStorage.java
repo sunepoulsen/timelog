@@ -29,11 +29,12 @@ import java.util.function.Function;
 @XSlf4j
 public class DatabaseStorage {
     public DatabaseStorage() {
-        this( PERSISTENCE_NAME );
+        this( PERSISTENCE_NAME, PROPERTIES_FILENAME );
     }
 
-    public DatabaseStorage( String persistenceName ) {
+    public DatabaseStorage( String persistenceName, String propertiesFilename ) {
         this.persistenceName = persistenceName;
+        this.propertiesFilename = propertiesFilename;
     }
 
     public void connect() {
@@ -52,7 +53,7 @@ public class DatabaseStorage {
 
     public void migrate() throws IOException, SQLException, LiquibaseException {
         Properties settings = new Properties();
-        settings.load( getClass().getResourceAsStream( "/application.properties" ) );
+        settings.load( getClass().getResourceAsStream( propertiesFilename ) );
 
         log.info( "Supported JDBC drivers:" );
         Enumeration<Driver> drivers = DriverManager.getDrivers();
@@ -200,6 +201,9 @@ public class DatabaseStorage {
     //-------------------------------------------------------------------------
 
     private static final String PERSISTENCE_NAME = "timelog";
+    private static final String PROPERTIES_FILENAME = "/application.properties";
+
     private final String persistenceName;
+    private final String propertiesFilename;
     private EntityManagerFactory emf;
 }

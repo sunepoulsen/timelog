@@ -3,20 +3,23 @@ package dk.sunepoulsen.timelog.ui.mainwindow;
 import dk.sunepoulsen.timelog.registry.Registry;
 import dk.sunepoulsen.timelog.ui.dialogs.registration.systems.RegistrationSystemDialog;
 import dk.sunepoulsen.timelog.ui.model.registration.systems.RegistrationSystemModel;
+import dk.sunepoulsen.timelog.ui.tasks.backend.registration.systems.CreateRegistrationSystemTask;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
 import javafx.scene.control.MenuBar;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import lombok.Setter;
 import lombok.extern.slf4j.XSlf4j;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 
 /**
  * Created by sunepoulsen on 09/05/2017.
@@ -26,10 +29,13 @@ public class ActionPanel extends AnchorPane implements Initializable {
     @FXML
     private MenuBar menuBar = null;
 
-    private Registry registry;
+    private Stage stage;
     private ResourceBundle bundle;
 
-    private Stage stage;
+    private Registry registry;
+
+    @Setter
+    private Consumer<Task> onTaskCreated;
 
     public ActionPanel() {
         this.registry = Registry.getDefault();
@@ -67,14 +73,18 @@ public class ActionPanel extends AnchorPane implements Initializable {
      */
     @FXML
     private void newRegistrationSystem( final ActionEvent event ) {
+        if( onTaskCreated == null ) {
+            log.warn( "onTaskCreated is not initialized. Unable to create tasks for the UI." );
+            return;
+        }
+
         RegistrationSystemDialog dialog = new RegistrationSystemDialog();
         Optional<RegistrationSystemModel> model = dialog.showAndWait();
 
-        if( model.isPresent() ) {
-            Alert alert = new Alert( Alert.AlertType.INFORMATION, bundle.getString( "action.not.implemented" ) );
-            alert.setHeaderText( bundle.getString( "mainmenu.file" ) + "|" + bundle.getString( "mainmenu.file.new" ) + "|" + bundle.getString( "mainmenu.file.new.registration.system" ) );
-            alert.show();
-        }
+        model.ifPresent( registrationSystemModel -> {
+            CreateRegistrationSystemTask task = new CreateRegistrationSystemTask( registry.getBackendConnection(), registrationSystemModel );
+            onTaskCreated.accept( task );
+        } );
     }
 
 }

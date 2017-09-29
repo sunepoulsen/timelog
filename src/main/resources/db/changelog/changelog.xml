@@ -7,4 +7,5 @@
     <include file="holidays.xml" relativeToChangelogFile="true" />
 
     <include file="agreements.xml" relativeToChangelogFile="true" />
+    <include file="registrationsystems.xml" relativeToChangelogFile="true" />
 </databaseChangeLog>
