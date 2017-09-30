@@ -29,10 +29,15 @@ public class TimelogApplication extends Application {
 
         // Maximize the window
         final Screen screen = Screen.getPrimary();
-        primaryStage.setX( screen.getVisualBounds().getMinX() );
-        primaryStage.setY( screen.getVisualBounds().getMinY() );
-        primaryStage.setWidth( screen.getVisualBounds().getWidth() );
-        primaryStage.setHeight( screen.getVisualBounds().getHeight() );
+
+        double screenWidth = screen.getVisualBounds().getWidth();
+        double screenHeight = screen.getVisualBounds().getHeight();
+        double width = screenWidth / 1.5;
+        double height = screenHeight / 1.5;
+        primaryStage.setX( ( screenWidth - width ) / 2.0 );
+        primaryStage.setY( ( screenHeight - height ) / 2.0 );
+        primaryStage.setWidth( width );
+        primaryStage.setHeight( height );
 
         primaryStage.show();
     }
