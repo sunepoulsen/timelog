@@ -1,5 +1,6 @@
 package dk.sunepoulsen.timelog.backend.services;
 
+import dk.sunepoulsen.timelog.backend.events.BackendConnectionEvents;
 import dk.sunepoulsen.timelog.db.storage.DatabaseStorage;
 
 /**
@@ -7,13 +8,15 @@ import dk.sunepoulsen.timelog.db.storage.DatabaseStorage;
  * the different concepts that makes an BackendConnection.
  */
 public class ServicesFactory {
+    private final BackendConnectionEvents backendConnectionEvents;
     private final DatabaseStorage database;
 
-    public ServicesFactory( final DatabaseStorage database ) {
+    public ServicesFactory( final BackendConnectionEvents backendConnectionEvents, final DatabaseStorage database ) {
+        this.backendConnectionEvents = backendConnectionEvents;
         this.database = database;
     }
 
     public RegistrationSystemsService newRegistrationSystemsService() {
-        return new RegistrationSystemsService( this.database );
+        return new RegistrationSystemsService( this.backendConnectionEvents.getRegistrationSystems(), this.database );
     }
 }

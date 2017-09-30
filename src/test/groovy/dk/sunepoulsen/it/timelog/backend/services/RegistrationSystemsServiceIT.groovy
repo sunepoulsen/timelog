@@ -1,5 +1,6 @@
 package dk.sunepoulsen.it.timelog.backend.services
 
+import dk.sunepoulsen.timelog.backend.events.RegistrationSystemsEvents
 import dk.sunepoulsen.timelog.backend.services.RegistrationSystemsService
 import dk.sunepoulsen.timelog.db.storage.DatabaseStorage
 import dk.sunepoulsen.timelog.ui.model.registration.systems.RegistrationSystemModel
@@ -31,7 +32,7 @@ class RegistrationSystemsServiceIT {
 
     @Test
     void testCreateRegistrationSystem() {
-        RegistrationSystemsService service = new RegistrationSystemsService( databaseStorage )
+        RegistrationSystemsService service = new RegistrationSystemsService( new RegistrationSystemsEvents(), databaseStorage )
 
         RegistrationSystemModel model = new RegistrationSystemModel( name: "name", description: "description" )
         service.create( model )

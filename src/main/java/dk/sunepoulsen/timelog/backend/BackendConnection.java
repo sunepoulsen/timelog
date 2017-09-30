@@ -1,8 +1,10 @@
 package dk.sunepoulsen.timelog.backend;
 
+import dk.sunepoulsen.timelog.backend.events.BackendConnectionEvents;
 import dk.sunepoulsen.timelog.backend.services.ServicesFactory;
 import dk.sunepoulsen.timelog.db.storage.DatabaseStorage;
 import liquibase.exception.LiquibaseException;
+import lombok.Getter;
 import lombok.extern.slf4j.XSlf4j;
 
 import java.io.IOException;
@@ -30,8 +32,12 @@ import java.sql.SQLException;
 public class BackendConnection {
     private DatabaseStorage database;
 
+    @Getter
+    private BackendConnectionEvents events;
+
     public BackendConnection() {
         this.database = new DatabaseStorage();
+        this.events = new BackendConnectionEvents();
     }
 
     public void connect() throws BackendConnectionException {
@@ -53,6 +59,6 @@ public class BackendConnection {
     }
 
     public ServicesFactory servicesFactory() {
-        return new ServicesFactory( this.database );
+        return new ServicesFactory( this.events, this.database );
     }
 }

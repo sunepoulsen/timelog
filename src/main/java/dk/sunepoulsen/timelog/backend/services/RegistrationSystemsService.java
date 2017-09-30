@@ -1,11 +1,13 @@
 package dk.sunepoulsen.timelog.backend.services;
 
+import dk.sunepoulsen.timelog.backend.events.RegistrationSystemsEvents;
 import dk.sunepoulsen.timelog.db.entities.RegistrationSystemEntity;
 import dk.sunepoulsen.timelog.db.storage.DatabaseStorage;
 import dk.sunepoulsen.timelog.ui.model.registration.systems.RegistrationSystemModel;
 import dk.sunepoulsen.timelog.validation.TimeLogValidateException;
 import dk.sunepoulsen.timelog.validation.TimeLogValidation;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,9 +15,11 @@ import java.util.stream.Collectors;
  * Created by sunepoulsen on 12/06/2017.
  */
 public class RegistrationSystemsService {
+    private final RegistrationSystemsEvents events;
     private final DatabaseStorage database;
 
-    public RegistrationSystemsService( final DatabaseStorage database ) {
+    public RegistrationSystemsService( final RegistrationSystemsEvents events, final DatabaseStorage database ) {
+        this.events = events;
         this.database = database;
     }
 
@@ -29,6 +33,7 @@ public class RegistrationSystemsService {
             registrationSystem.setId( entity.getId() );
         } );
 
+        events.getCreated().setValue( Arrays.asList( registrationSystem ) );
         return registrationSystem;
     }
 

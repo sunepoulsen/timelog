@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.*?>
+<fx:root type="javafx.scene.layout.AnchorPane" xmlns:fx="http://javafx.com/fxml">
+    <StackPane AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" AnchorPane.rightAnchor="0.0"
+               AnchorPane.bottomAnchor="0.0">
+        <children>
+            <TableView fx:id="viewer" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0"
+                       AnchorPane.rightAnchor="10.0" AnchorPane.bottomAnchor="10.0">
+                <columns>
+                    <TableColumn text="Name" visible="true">
+                        <cellValueFactory>
+                            <PropertyValueFactory property="name"/>
+                        </cellValueFactory>
+                    </TableColumn>
+
+                    <TableColumn text="Description" visible="true">
+                        <cellValueFactory>
+                            <PropertyValueFactory property="description"/>
+                        </cellValueFactory>
+                    </TableColumn>
+                </columns>
+            </TableView>
+
+            <Region fx:id="veil" style="-fx-background-color: rgba(0, 0, 0, 0.4)" visible="false" />
+            <ProgressIndicator fx:id="progressIndicator" maxWidth="150" maxHeight="150" visible="false" />
+        </children>
+    </StackPane>
+</fx:root>
