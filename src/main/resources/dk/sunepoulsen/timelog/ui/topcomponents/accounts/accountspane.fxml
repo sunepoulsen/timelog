@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import javafx.scene.layout.*?>
+<fx:root type="javafx.scene.layout.BorderPane" xmlns:fx="http://javafx.com/fxml">
+    <center>
+        <StackPane>
+            <children>
+                <TableView fx:id="accountsView" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0"
+                           AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0">
+                    <columns>
+                        <TableColumn text="%accounts.table.column.name.title" visible="true">
+                            <cellValueFactory>
+                                <PropertyValueFactory property="name"/>
+                            </cellValueFactory>
+                        </TableColumn>
+
+                        <TableColumn text="%accounts.table.column.registration.system.title" visible="true">
+                            <cellValueFactory>
+                                <PropertyValueFactory property="type"/>
+                            </cellValueFactory>
+                        </TableColumn>
+
+                        <TableColumn text="%accounts.table.column.description.title" visible="true">
+                            <cellValueFactory>
+                                <PropertyValueFactory property="description"/>
+                            </cellValueFactory>
+                        </TableColumn>
+                    </columns>
+                </TableView>
+
+
+                <Region fx:id="veil" style="-fx-background-color: rgba(0, 0, 0, 0.4)" visible="false" />
+                <ProgressIndicator fx:id="progressIndicator" maxWidth="150" maxHeight="150" visible="false" />
+            </children>
+        </StackPane>
+    </center>
+
+    <bottom>
+        <ButtonBar>
+            <padding>
+                <Insets top="10.0" />
+            </padding>
+
+            <buttons>
+                <Button fx:id="addButton" text="%accounts.table.add.button.title" ButtonBar.buttonData="RIGHT"/>
+            </buttons>
+        </ButtonBar>
+    </bottom>
+</fx:root>

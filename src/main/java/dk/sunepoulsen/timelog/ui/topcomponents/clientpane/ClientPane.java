@@ -48,12 +48,6 @@ public class ClientPane extends AnchorPane {
 
     private void showCurrentPane( TreeNavigatorModel newValue ) {
         Node node = newValue.getNode();
-        if( !stackPane.getChildren().contains( node ) ) {
-            stackPane.getChildren().add( node );
-        }
-
-        if( node != null ) {
-            node.toFront();
-        }
+        stackPane.getChildren().setAll( node );
     }
 }
