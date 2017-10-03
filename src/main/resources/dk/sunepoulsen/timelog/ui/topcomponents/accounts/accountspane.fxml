@@ -17,11 +17,7 @@
                             </cellValueFactory>
                         </TableColumn>
 
-                        <TableColumn text="%accounts.table.column.registration.system.title" visible="true">
-                            <cellValueFactory>
-                                <PropertyValueFactory property="type"/>
-                            </cellValueFactory>
-                        </TableColumn>
+                        <TableColumn fx:id="registrationSystemColumn" text="%accounts.table.column.registration.system.title" visible="true" />
 
                         <TableColumn text="%accounts.table.column.description.title" visible="true">
                             <cellValueFactory>
@@ -45,7 +41,7 @@
             </padding>
 
             <buttons>
-                <Button fx:id="addButton" text="%accounts.table.add.button.title" ButtonBar.buttonData="RIGHT"/>
+                <Button fx:id="addButton" text="%accounts.table.add.button.title" ButtonBar.buttonData="RIGHT" onAction="#addAccount"/>
             </buttons>
         </ButtonBar>
     </bottom>
