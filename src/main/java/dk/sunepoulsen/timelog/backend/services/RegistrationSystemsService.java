@@ -45,14 +45,14 @@ public class RegistrationSystemsService {
     }
 
     public List<RegistrationSystemModel> findAll() {
-        List<RegistrationSystemEntity> entities = database.query( em ->  em.createNamedQuery( "findAll", RegistrationSystemEntity.class ) );
+        List<RegistrationSystemEntity> entities = database.query( em ->  em.createNamedQuery( "findAllRegistrationSystems", RegistrationSystemEntity.class ) );
 
         return entities.stream()
-                .map( this::convertEntity )
+                .map( RegistrationSystemsService::convertEntity )
                 .collect( Collectors.toList() );
     }
 
-    private RegistrationSystemEntity convertModel( RegistrationSystemModel model ) {
+    static RegistrationSystemEntity convertModel( RegistrationSystemModel model ) {
         RegistrationSystemEntity entity = new RegistrationSystemEntity();
 
         entity.setId( model.getId() );
@@ -62,7 +62,7 @@ public class RegistrationSystemsService {
         return entity;
     }
 
-    private RegistrationSystemModel convertEntity( RegistrationSystemEntity entity ) {
+    static RegistrationSystemModel convertEntity( RegistrationSystemEntity entity ) {
         RegistrationSystemModel model = new RegistrationSystemModel();
 
         model.setId( entity.getId() );

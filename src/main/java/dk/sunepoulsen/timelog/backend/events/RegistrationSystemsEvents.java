@@ -9,8 +9,10 @@ import java.util.List;
 @Data
 public class RegistrationSystemsEvents {
     private SimpleObjectProperty<List<RegistrationSystemModel>> created;
+    private SimpleObjectProperty<List<RegistrationSystemModel>> updated;
 
     public RegistrationSystemsEvents() {
         this.created = new SimpleObjectProperty<>();
+        this.updated = new SimpleObjectProperty<>();
     }
 }

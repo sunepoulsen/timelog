@@ -3,12 +3,15 @@ package dk.sunepoulsen.timelog.db.entities;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.Set;
+
+import static javax.persistence.CascadeType.ALL;
 
 @Data
 @Entity
 @Table( name = "registrationsystems" )
 @NamedQueries( {
-    @NamedQuery( name = "findAll", query = "SELECT r FROM RegistrationSystemEntity r" )
+    @NamedQuery( name = "findAllRegistrationSystems", query = "SELECT r FROM RegistrationSystemEntity r" )
 })
 public class RegistrationSystemEntity {
     /**
@@ -25,4 +28,7 @@ public class RegistrationSystemEntity {
 
     @Column( name = "description" )
     private String description;
+
+    @OneToMany( cascade = ALL, mappedBy = "registrationSystem" )
+    private Set<AccountEntity> accounts;
 }

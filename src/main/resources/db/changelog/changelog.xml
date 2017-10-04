@@ -8,4 +8,5 @@
 
     <include file="agreements.xml" relativeToChangelogFile="true" />
     <include file="registrationsystems.xml" relativeToChangelogFile="true" />
+    <include file="accounts.xml" relativeToChangelogFile="true" />
 </databaseChangeLog>

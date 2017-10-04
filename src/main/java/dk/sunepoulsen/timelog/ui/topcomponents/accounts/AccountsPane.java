@@ -4,15 +4,18 @@ import dk.sunepoulsen.timelog.backend.BackendConnection;
 import dk.sunepoulsen.timelog.registry.Registry;
 import dk.sunepoulsen.timelog.ui.dialogs.accounts.AccountDialog;
 import dk.sunepoulsen.timelog.ui.model.accounts.AccountModel;
+import dk.sunepoulsen.timelog.ui.tasks.backend.LoadBackendServiceItemsTask;
+import dk.sunepoulsen.timelog.ui.tasks.backend.accounts.CreateAccountTask;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Region;
 import lombok.extern.slf4j.XSlf4j;
 
 import java.io.IOException;
@@ -23,13 +26,17 @@ public class AccountsPane extends BorderPane {
     private Registry registry;
     private BackendConnection backendConnection = null;
 
-    private ObservableList<AccountModel> accountModel;
-
     @FXML
     private TableView<AccountModel> accountsView;
 
     @FXML
     private TableColumn<AccountModel, String> registrationSystemColumn;
+
+    @FXML
+    private Region veil = null;
+
+    @FXML
+    private ProgressIndicator progressIndicator = null;
 
     public AccountsPane() {
         this.registry = Registry.getDefault();
@@ -60,8 +67,29 @@ public class AccountsPane extends BorderPane {
             return new SimpleObjectProperty<>( "" );
         } );
 
-        accountModel = FXCollections.observableArrayList();
-        accountsView.setItems( accountModel );
+        backendConnection.getEvents().getAccounts().getCreated().addListener( ( observable, oldValue, newValue ) -> reload() );
+
+        reload();
+    }
+
+    private void reload() {
+        LoadBackendServiceItemsTask<AccountModel> task = new LoadBackendServiceItemsTask<>( backendConnection,
+            connection -> connection.servicesFactory().newAccountsService().findAll()
+        );
+
+        progressIndicator.progressProperty().bind( task.progressProperty() );
+        veil.visibleProperty().bind( task.runningProperty() );
+        progressIndicator.visibleProperty().bind( task.runningProperty() );
+
+        task.setOnSucceeded( event -> {
+            ObservableList<AccountModel> movies = task.getValue();
+
+            log.info( "Viewing {} accounts", movies.size() );
+            accountsView.setItems( movies );
+        } );
+
+        log.info( "Loading accounts" );
+        registry.getUiRegistry().getTaskExecutorService().submit( task );
     }
 
     @FXML
@@ -69,7 +97,10 @@ public class AccountsPane extends BorderPane {
         AccountDialog dialog = new AccountDialog();
         Optional<AccountModel> model = dialog.showAndWait();
 
-        model.ifPresent( item -> accountModel.add( item ) );
+        model.ifPresent( item -> {
+            CreateAccountTask task = new CreateAccountTask( backendConnection, item );
+            registry.getUiRegistry().getTaskExecutorService().submit( task );
+        } );
     }
 
 }

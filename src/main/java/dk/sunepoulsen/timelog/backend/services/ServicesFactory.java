@@ -16,6 +16,10 @@ public class ServicesFactory {
         this.database = database;
     }
 
+    public AccountsService newAccountsService() {
+        return new AccountsService( this.backendConnectionEvents.getAccounts(), this.backendConnectionEvents.getRegistrationSystems(), newRegistrationSystemsService(), this.database );
+    }
+
     public RegistrationSystemsService newRegistrationSystemsService() {
         return new RegistrationSystemsService( this.backendConnectionEvents.getRegistrationSystems(), this.database );
     }

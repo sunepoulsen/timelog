@@ -38,7 +38,8 @@ public class Settings {
         if( file.exists() ) {
             this.userStates = mapper.readValue( file, UserStates.class );
         }
-        else {
+
+        if( userStates == null ) {
             this.userStates = new UserStates();
         }
     }
