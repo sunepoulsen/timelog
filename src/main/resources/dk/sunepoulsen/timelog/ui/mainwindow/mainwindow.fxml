@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import dk.sunepoulsen.timelog.ui.mainwindow.ActionPanel?>
 <?import dk.sunepoulsen.timelog.ui.topcomponents.clientpane.ClientPane?>
 <?import dk.sunepoulsen.timelog.ui.topcomponents.navigator.TreeNavigator?>
 <?import javafx.scene.control.SplitPane?>
@@ -9,9 +8,6 @@
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="dk.sunepoulsen.timelog.ui.mainwindow.MainWindow">
-    <top>
-        <ActionPanel fx:id="actionPanel" />
-    </top>
     <center>
         <SplitPane fx:id="splitPane">
             <items>
