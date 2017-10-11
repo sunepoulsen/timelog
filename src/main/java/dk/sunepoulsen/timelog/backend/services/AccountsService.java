@@ -41,8 +41,8 @@ public class AccountsService {
             accountModel.setId( entity.getId() );
         } );
 
-        accountsEvents.getCreated().setValue( Arrays.asList( accountModel ) );
-        registrationSystemsEvents.getUpdated().setValue( Arrays.asList( accountModel.getRegistrationSystem() ) );
+        accountsEvents.getCreatedEvent().fire( Arrays.asList( accountModel ) );
+        registrationSystemsEvents.getUpdatedEvent().fire( Arrays.asList( accountModel.getRegistrationSystem() ) );
 
         return accountModel;
     }

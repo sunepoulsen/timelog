@@ -67,7 +67,7 @@ public class AccountsPane extends BorderPane {
             return new SimpleObjectProperty<>( "" );
         } );
 
-        backendConnection.getEvents().getAccounts().getCreated().addListener( ( observable, oldValue, newValue ) -> reload() );
+        backendConnection.getEvents().getAccounts().getCreatedEvent().addListener( v -> reload() );
 
         reload();
     }

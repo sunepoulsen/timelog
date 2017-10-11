@@ -6,7 +6,9 @@ import dk.sunepoulsen.timelog.db.storage.DatabaseStorage;
 import dk.sunepoulsen.timelog.ui.model.registration.systems.RegistrationSystemModel;
 import dk.sunepoulsen.timelog.validation.TimeLogValidateException;
 import dk.sunepoulsen.timelog.validation.TimeLogValidation;
+import lombok.extern.slf4j.XSlf4j;
 
+import javax.persistence.Query;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,6 +16,7 @@ import java.util.stream.Collectors;
 /**
  * Created by sunepoulsen on 12/06/2017.
  */
+@XSlf4j
 public class RegistrationSystemsService {
     private final RegistrationSystemsEvents events;
     private final DatabaseStorage database;
@@ -33,8 +36,20 @@ public class RegistrationSystemsService {
             registrationSystem.setId( entity.getId() );
         } );
 
-        events.getCreated().setValue( Arrays.asList( registrationSystem ) );
+        events.getCreatedEvent().fire( Arrays.asList( registrationSystem ) );
         return registrationSystem;
+    }
+
+    public void delete( List<RegistrationSystemModel> registrationSystems) {
+        database.transactional( em -> {
+            Query q = em.createNamedQuery( "deleteRegistrationSystems" );
+            q.setParameter( "ids", registrationSystems.stream().map( RegistrationSystemModel::getId ).collect( Collectors.toList() ) );
+
+            log.info( "Deleted {} registration systems", q.executeUpdate() );
+        } );
+
+        log.debug( "Tricker event: RegistrationSystemsEvents::deletedEvent" );
+        events.getDeletedEvent().fire( registrationSystems );
     }
 
     public RegistrationSystemModel find( Long id ) {

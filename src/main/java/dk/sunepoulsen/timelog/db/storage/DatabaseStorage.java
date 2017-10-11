@@ -131,12 +131,16 @@ public class DatabaseStorage {
         }
     }
 
-    public <T> int executeUpdate( Function<EntityManager, TypedQuery<T>> function ) {
+    public <T> int executeUpdate( Function<EntityManager, Query> function ) {
         EntityManager em = emf.createEntityManager();
 
         try {
-            TypedQuery<T> query = function.apply( em );
+            Query query = function.apply( em );
             return query.executeUpdate();
+        }
+        catch( Exception ex ) {
+            log.catching( ex );
+            throw ex;
         }
         finally {
             em.close();

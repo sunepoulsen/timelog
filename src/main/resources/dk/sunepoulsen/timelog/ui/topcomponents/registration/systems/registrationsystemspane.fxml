@@ -39,7 +39,8 @@
             </padding>
 
             <buttons>
-                <Button fx:id="addButton" text="%add.button.title" ButtonBar.buttonData="RIGHT" onAction="#addRegistrationSystem"/>
+                <Button text="%add.button.title" ButtonBar.buttonData="RIGHT" onAction="#addItem"/>
+                <Button fx:id="deleteButton" text="%delete.button.title" ButtonBar.buttonData="RIGHT" onAction="#deleteItem"/>
             </buttons>
         </ButtonBar>
     </bottom>

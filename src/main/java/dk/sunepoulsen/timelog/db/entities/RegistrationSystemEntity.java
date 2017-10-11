@@ -11,7 +11,9 @@ import static javax.persistence.CascadeType.ALL;
 @Entity
 @Table( name = "registrationsystems" )
 @NamedQueries( {
-    @NamedQuery( name = "findAllRegistrationSystems", query = "SELECT r FROM RegistrationSystemEntity r" )
+    @NamedQuery( name = "findAllRegistrationSystems", query = "SELECT r FROM RegistrationSystemEntity r" ),
+    @NamedQuery( name = "deleteRegistrationSystems", query = "DELETE FROM RegistrationSystemEntity r WHERE r.id IN :ids" ),
+    @NamedQuery( name = "deleteRegistrationSystem", query = "DELETE FROM RegistrationSystemEntity r WHERE r.id = :id" )
 })
 public class RegistrationSystemEntity {
     /**
@@ -29,6 +31,6 @@ public class RegistrationSystemEntity {
     @Column( name = "description" )
     private String description;
 
-    @OneToMany( cascade = ALL, mappedBy = "registrationSystem" )
+    @OneToMany( cascade = ALL, fetch = FetchType.LAZY, mappedBy = "registrationSystem" )
     private Set<AccountEntity> accounts;
 }
