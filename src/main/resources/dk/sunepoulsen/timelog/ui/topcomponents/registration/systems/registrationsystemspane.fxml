@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <fx:root type="javafx.scene.layout.BorderPane" xmlns:fx="http://javafx.com/fxml">
     <center>
@@ -39,9 +40,33 @@
             </padding>
 
             <buttons>
-                <Button text="%add.button.title" ButtonBar.buttonData="RIGHT" onAction="#addButtonClicked"/>
-                <Button fx:id="editButton" text="%edit.button.title" ButtonBar.buttonData="RIGHT" onAction="#editButtonClicked"/>
-                <Button fx:id="deleteButton" text="%delete.button.title" ButtonBar.buttonData="RIGHT" onAction="#deleteButtonClicked"/>
+                <Button text="%add.button.title" ButtonBar.buttonData="RIGHT" onAction="#addButtonClicked">
+                    <graphic>
+                        <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@/images/add.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+                <Button fx:id="editButton" text="%edit.button.title" ButtonBar.buttonData="RIGHT" onAction="#editButtonClicked">
+                    <graphic>
+                        <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@/images/edit.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+                <Button fx:id="deleteButton" text="%delete.button.title" ButtonBar.buttonData="RIGHT" onAction="#deleteButtonClicked">
+                    <graphic>
+                        <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@/images/delete.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
             </buttons>
         </ButtonBar>
     </bottom>

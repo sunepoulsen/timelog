@@ -3,6 +3,8 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <fx:root type="javafx.scene.layout.BorderPane" xmlns:fx="http://javafx.com/fxml">
     <center>
@@ -41,8 +43,24 @@
             </padding>
 
             <buttons>
-                <Button fx:id="addButton" text="%accounts.table.add.button.title" ButtonBar.buttonData="RIGHT" onAction="#addButtonClicked"/>
-                <Button fx:id="editButton" text="%accounts.table.edit.button.title" ButtonBar.buttonData="RIGHT" onAction="#editButtonClicked"/>
+                <Button fx:id="addButton" text="%accounts.table.add.button.title" ButtonBar.buttonData="RIGHT" onAction="#addButtonClicked">
+                    <graphic>
+                        <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@/images/add.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+                <Button fx:id="editButton" text="%accounts.table.edit.button.title" ButtonBar.buttonData="RIGHT" onAction="#editButtonClicked">
+                    <graphic>
+                        <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@/images/edit.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
             </buttons>
         </ButtonBar>
     </bottom>
