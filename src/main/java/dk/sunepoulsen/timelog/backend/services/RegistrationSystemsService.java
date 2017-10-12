@@ -30,13 +30,28 @@ public class RegistrationSystemsService {
         TimeLogValidation.validateValue( registrationSystem );
 
         database.transactional( em -> {
-            RegistrationSystemEntity entity = convertModel( registrationSystem );
+            RegistrationSystemEntity entity = convertModel( new RegistrationSystemEntity(), registrationSystem );
             em.persist( entity );
 
             registrationSystem.setId( entity.getId() );
         } );
 
         events.getCreatedEvent().fire( Arrays.asList( registrationSystem ) );
+        return registrationSystem;
+    }
+
+    public RegistrationSystemModel update( RegistrationSystemModel registrationSystem ) throws TimeLogValidateException {
+        TimeLogValidation.validateValue( registrationSystem );
+
+        database.transactional( em -> {
+            RegistrationSystemEntity entity = em.find( RegistrationSystemEntity.class, registrationSystem.getId() );
+            entity = convertModel( entity, registrationSystem );
+            em.persist( entity );
+
+            registrationSystem.setId( entity.getId() );
+        } );
+
+        events.getUpdatedEvent().fire( Arrays.asList( registrationSystem ) );
         return registrationSystem;
     }
 
@@ -67,9 +82,7 @@ public class RegistrationSystemsService {
                 .collect( Collectors.toList() );
     }
 
-    static RegistrationSystemEntity convertModel( RegistrationSystemModel model ) {
-        RegistrationSystemEntity entity = new RegistrationSystemEntity();
-
+    static RegistrationSystemEntity convertModel( RegistrationSystemEntity entity, RegistrationSystemModel model ) {
         entity.setId( model.getId() );
         entity.setName( model.getName() );
         entity.setDescription( model.getDescription() );

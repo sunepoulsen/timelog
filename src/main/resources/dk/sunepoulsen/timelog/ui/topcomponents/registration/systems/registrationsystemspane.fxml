@@ -10,7 +10,7 @@
                    AnchorPane.bottomAnchor="0.0">
             <children>
                 <TableView fx:id="viewer" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0"
-                           AnchorPane.rightAnchor="10.0" AnchorPane.bottomAnchor="10.0">
+                               AnchorPane.rightAnchor="10.0" AnchorPane.bottomAnchor="10.0" onMouseClicked="#viewerRowClicked">
                     <columns>
                         <TableColumn text="%table.column.name.title" visible="true">
                             <cellValueFactory>
@@ -39,8 +39,9 @@
             </padding>
 
             <buttons>
-                <Button text="%add.button.title" ButtonBar.buttonData="RIGHT" onAction="#addItem"/>
-                <Button fx:id="deleteButton" text="%delete.button.title" ButtonBar.buttonData="RIGHT" onAction="#deleteItem"/>
+                <Button text="%add.button.title" ButtonBar.buttonData="RIGHT" onAction="#addButtonClicked"/>
+                <Button fx:id="editButton" text="%edit.button.title" ButtonBar.buttonData="RIGHT" onAction="#editButtonClicked"/>
+                <Button fx:id="deleteButton" text="%delete.button.title" ButtonBar.buttonData="RIGHT" onAction="#deleteButtonClicked"/>
             </buttons>
         </ButtonBar>
     </bottom>
