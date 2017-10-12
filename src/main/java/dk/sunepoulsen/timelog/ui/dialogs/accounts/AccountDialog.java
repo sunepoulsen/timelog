@@ -83,7 +83,7 @@ public class AccountDialog extends GridPane implements Initializable {
         registrationSystemField.setItems( FXCollections.observableArrayList( registrationSystems ) );
         if( model != null ) {
             registrationSystems.stream()
-                .filter( accountModel -> accountModel.getId().equals( model.getId() ) )
+                .filter( accountModel -> accountModel.getId().equals( model.getRegistrationSystem().getId() ) )
                 .findFirst()
                 .ifPresent( rs -> registrationSystemField.getSelectionModel().select( rs ) );
         }

@@ -35,13 +35,31 @@ public class AccountsService {
 
         database.transactional( em -> {
             RegistrationSystemEntity registrationSystemEntity = em.find( RegistrationSystemEntity.class, accountModel.getRegistrationSystem().getId() );
-            AccountEntity entity = convertModel( accountModel, registrationSystemEntity );
+            AccountEntity entity = convertModel( new AccountEntity(), accountModel, registrationSystemEntity );
             em.persist( entity );
 
             accountModel.setId( entity.getId() );
         } );
 
         accountsEvents.getCreatedEvent().fire( Arrays.asList( accountModel ) );
+        registrationSystemsEvents.getUpdatedEvent().fire( Arrays.asList( accountModel.getRegistrationSystem() ) );
+
+        return accountModel;
+    }
+
+    public AccountModel update( AccountModel accountModel ) throws TimeLogValidateException {
+        TimeLogValidation.validateValue( accountModel );
+
+        database.transactional( em -> {
+            RegistrationSystemEntity registrationSystemEntity = em.find( RegistrationSystemEntity.class, accountModel.getRegistrationSystem().getId() );
+            AccountEntity entity = em.find( AccountEntity.class, accountModel.getId() );
+            entity = convertModel( entity, accountModel, registrationSystemEntity );
+            em.persist( entity );
+
+            accountModel.setId( entity.getId() );
+        } );
+
+        accountsEvents.getUpdatedEvent().fire( Arrays.asList( accountModel ) );
         registrationSystemsEvents.getUpdatedEvent().fire( Arrays.asList( accountModel.getRegistrationSystem() ) );
 
         return accountModel;
@@ -55,9 +73,7 @@ public class AccountsService {
             .collect( Collectors.toList() );
     }
 
-    private static AccountEntity convertModel( AccountModel model, RegistrationSystemEntity registrationSystemEntity ) {
-        AccountEntity entity = new AccountEntity();
-
+    private static AccountEntity convertModel( AccountEntity entity, AccountModel model, RegistrationSystemEntity registrationSystemEntity ) {
         entity.setId( model.getId() );
         entity.setRegistrationSystem( registrationSystemEntity );
         entity.setName( model.getName() );

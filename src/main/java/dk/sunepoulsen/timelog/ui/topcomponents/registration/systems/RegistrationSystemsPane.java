@@ -6,8 +6,6 @@ import dk.sunepoulsen.timelog.ui.dialogs.registration.systems.RegistrationSystem
 import dk.sunepoulsen.timelog.ui.model.registration.systems.RegistrationSystemModel;
 import dk.sunepoulsen.timelog.ui.tasks.backend.ExecuteBackendServiceTask;
 import dk.sunepoulsen.timelog.ui.tasks.backend.LoadBackendServiceItemsTask;
-import dk.sunepoulsen.timelog.ui.tasks.backend.registration.systems.CreateRegistrationSystemTask;
-import dk.sunepoulsen.timelog.ui.tasks.backend.registration.systems.UpdateRegistrationSystemTask;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -139,7 +137,9 @@ public class RegistrationSystemsPane extends BorderPane {
         Optional<RegistrationSystemModel> model = dialog.showAndWait();
 
         model.ifPresent( registrationSystemModel -> {
-            CreateRegistrationSystemTask task = new CreateRegistrationSystemTask( registry.getBackendConnection(), registrationSystemModel );
+            ExecuteBackendServiceTask task = new ExecuteBackendServiceTask( backendConnection, connection ->
+                connection.servicesFactory().newRegistrationSystemsService().create( registrationSystemModel )
+            );
             registry.getUiRegistry().getTaskExecutorService().submit( task );
         } );
     }
@@ -154,7 +154,9 @@ public class RegistrationSystemsPane extends BorderPane {
         Optional<RegistrationSystemModel> model = dialog.showAndWait();
 
         model.ifPresent( registrationSystemModel -> {
-            UpdateRegistrationSystemTask task = new UpdateRegistrationSystemTask( registry.getBackendConnection(), registrationSystemModel );
+            ExecuteBackendServiceTask task = new ExecuteBackendServiceTask( backendConnection, connection ->
+                connection.servicesFactory().newRegistrationSystemsService().update( registrationSystemModel )
+            );
             registry.getUiRegistry().getTaskExecutorService().submit( task );
         } );
     }

@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 /**
  * Created by sunepoulsen on 14/06/2017.
  */
-public class TimeLogValidateException extends Exception {
+public class TimeLogValidateException extends RuntimeException {
     @Data
     public class Item {
         private String message;

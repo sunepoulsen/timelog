@@ -9,8 +9,10 @@ import java.util.List;
 @Data
 public class AccountsEvents {
     private ConsumerEvent<List<AccountModel>> createdEvent;
+    private ConsumerEvent<List<AccountModel>> updatedEvent;
 
     public AccountsEvents() {
         this.createdEvent = new ConsumerEvent<>();
+        this.updatedEvent = new ConsumerEvent<>();
     }
 }

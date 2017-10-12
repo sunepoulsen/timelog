@@ -9,7 +9,7 @@
         <StackPane>
             <children>
                 <TableView fx:id="accountsView" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0"
-                           AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0">
+                           AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0" onMouseClicked="#viewerRowClicked">
                     <columns>
                         <TableColumn text="%accounts.table.column.name.title" visible="true">
                             <cellValueFactory>
@@ -41,7 +41,8 @@
             </padding>
 
             <buttons>
-                <Button fx:id="addButton" text="%accounts.table.add.button.title" ButtonBar.buttonData="RIGHT" onAction="#addAccount"/>
+                <Button fx:id="addButton" text="%accounts.table.add.button.title" ButtonBar.buttonData="RIGHT" onAction="#addButtonClicked"/>
+                <Button fx:id="editButton" text="%accounts.table.edit.button.title" ButtonBar.buttonData="RIGHT" onAction="#editButtonClicked"/>
             </buttons>
         </ButtonBar>
     </bottom>

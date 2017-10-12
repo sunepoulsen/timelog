@@ -4,16 +4,17 @@ import dk.sunepoulsen.timelog.backend.BackendConnection;
 import dk.sunepoulsen.timelog.registry.Registry;
 import dk.sunepoulsen.timelog.ui.dialogs.accounts.AccountDialog;
 import dk.sunepoulsen.timelog.ui.model.accounts.AccountModel;
+import dk.sunepoulsen.timelog.ui.tasks.backend.ExecuteBackendServiceTask;
 import dk.sunepoulsen.timelog.ui.tasks.backend.LoadBackendServiceItemsTask;
-import dk.sunepoulsen.timelog.ui.tasks.backend.accounts.CreateAccountTask;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.ProgressIndicator;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import lombok.extern.slf4j.XSlf4j;
@@ -37,6 +38,9 @@ public class AccountsPane extends BorderPane {
 
     @FXML
     private ProgressIndicator progressIndicator = null;
+
+    @FXML
+    private Button editButton = null;
 
     public AccountsPane() {
         this.registry = Registry.getDefault();
@@ -67,9 +71,20 @@ public class AccountsPane extends BorderPane {
             return new SimpleObjectProperty<>( "" );
         } );
 
-        backendConnection.getEvents().getAccounts().getCreatedEvent().addListener( v -> reload() );
+        accountsView.getSelectionModel().setSelectionMode( SelectionMode.MULTIPLE );
+        accountsView.getSelectionModel().getSelectedItems().addListener( this::updateButtonsState );
+
+        backendConnection.getEvents().getRegistrationSystems().getUpdatedEvent().addListener( v -> reload() );
+        backendConnection.getEvents().getAccounts().getUpdatedEvent().addListener( v -> reload() );
+        backendConnection.getEvents().getAccounts().getUpdatedEvent().addListener( v -> reload() );
 
         reload();
+    }
+
+    private void updateButtonsState( ListChangeListener.Change<? extends AccountModel> listener ) {
+        ObservableList<? extends AccountModel> list = listener.getList();
+
+        editButton.disableProperty().setValue( list.size() != 1 );
     }
 
     private void reload() {
@@ -86,6 +101,7 @@ public class AccountsPane extends BorderPane {
 
             log.info( "Viewing {} accounts", movies.size() );
             accountsView.setItems( movies );
+            editButton.setDisable( true );
         } );
 
         log.info( "Loading accounts" );
@@ -93,14 +109,51 @@ public class AccountsPane extends BorderPane {
     }
 
     @FXML
-    private void addAccount( final ActionEvent event ) {
+    private void viewerRowClicked( final MouseEvent mouseEvent ) {
+        if( mouseEvent.getEventType().equals( MouseEvent.MOUSE_CLICKED ) &&
+            mouseEvent.getButton() == MouseButton.PRIMARY &&
+            mouseEvent.getClickCount() == 2 )
+        {
+            showDialogAndUpdateAccount();
+        }
+    }
+
+    @FXML
+    private void addButtonClicked( final ActionEvent event ) {
+        showDialogAndCreateAccount();
+    }
+
+    @FXML
+    private void editButtonClicked( final ActionEvent event ) {
+        showDialogAndUpdateAccount();
+    }
+
+    private void showDialogAndCreateAccount() {
         AccountDialog dialog = new AccountDialog();
         Optional<AccountModel> model = dialog.showAndWait();
 
-        model.ifPresent( item -> {
-            CreateAccountTask task = new CreateAccountTask( backendConnection, item );
+        model.ifPresent( accountModel -> {
+            ExecuteBackendServiceTask task = new ExecuteBackendServiceTask( backendConnection, connection ->
+                connection.servicesFactory().newAccountsService().create( accountModel )
+            );
             registry.getUiRegistry().getTaskExecutorService().submit( task );
         } );
     }
 
+    @FXML
+    private void showDialogAndUpdateAccount() {
+        if( accountsView.getSelectionModel().getSelectedItem() == null ) {
+            return;
+        }
+
+        AccountDialog dialog = new AccountDialog( accountsView.getSelectionModel().getSelectedItem() );
+        Optional<AccountModel> model = dialog.showAndWait();
+
+        model.ifPresent( accountModel -> {
+            ExecuteBackendServiceTask task = new ExecuteBackendServiceTask( backendConnection, connection ->
+                connection.servicesFactory().newAccountsService().update( accountModel )
+            );
+            registry.getUiRegistry().getTaskExecutorService().submit( task );
+        } );
+    }
 }
