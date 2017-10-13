@@ -12,8 +12,7 @@ import static javax.persistence.CascadeType.ALL;
 @Table( name = "registrationsystems" )
 @NamedQueries( {
     @NamedQuery( name = "findAllRegistrationSystems", query = "SELECT r FROM RegistrationSystemEntity r" ),
-    @NamedQuery( name = "deleteRegistrationSystems", query = "DELETE FROM RegistrationSystemEntity r WHERE r.id IN :ids" ),
-    @NamedQuery( name = "deleteRegistrationSystem", query = "DELETE FROM RegistrationSystemEntity r WHERE r.id = :id" )
+    @NamedQuery( name = "deleteRegistrationSystems", query = "DELETE FROM RegistrationSystemEntity r WHERE r.id IN :ids" )
 })
 public class RegistrationSystemEntity {
     /**

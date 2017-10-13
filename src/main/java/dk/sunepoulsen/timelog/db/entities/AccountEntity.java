@@ -8,7 +8,8 @@ import javax.persistence.*;
 @Entity
 @Table( name = "accounts" )
 @NamedQueries( {
-    @NamedQuery( name = "findAllAccounts", query = "SELECT a FROM AccountEntity a" )
+    @NamedQuery( name = "findAllAccounts", query = "SELECT a FROM AccountEntity a" ),
+    @NamedQuery( name = "deleteAccounts", query = "DELETE FROM AccountEntity a WHERE a.id IN :ids" )
 })
 public class AccountEntity {
     /**

@@ -17,7 +17,7 @@ public class ServicesFactory {
     }
 
     public AccountsService newAccountsService() {
-        return new AccountsService( this.backendConnectionEvents.getAccounts(), this.backendConnectionEvents.getRegistrationSystems(), newRegistrationSystemsService(), this.database );
+        return new AccountsService( this.backendConnectionEvents.getAccounts(), this.backendConnectionEvents.getRegistrationSystems(), this.database );
     }
 
     public RegistrationSystemsService newRegistrationSystemsService() {

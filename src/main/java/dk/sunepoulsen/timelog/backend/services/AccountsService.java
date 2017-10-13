@@ -8,7 +8,9 @@ import dk.sunepoulsen.timelog.db.storage.DatabaseStorage;
 import dk.sunepoulsen.timelog.ui.model.accounts.AccountModel;
 import dk.sunepoulsen.timelog.validation.TimeLogValidateException;
 import dk.sunepoulsen.timelog.validation.TimeLogValidation;
+import lombok.extern.slf4j.XSlf4j;
 
+import javax.persistence.Query;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,17 +18,16 @@ import java.util.stream.Collectors;
 /**
  * Created by sunepoulsen on 12/06/2017.
  */
+@XSlf4j
 public class AccountsService {
     private final RegistrationSystemsEvents registrationSystemsEvents;
     private final AccountsEvents accountsEvents;
-    private final RegistrationSystemsService registrationSystemsService;
     private final DatabaseStorage database;
 
     public AccountsService( final AccountsEvents accountsEvents, final RegistrationSystemsEvents registrationSystemsEvents,
-                            final RegistrationSystemsService registrationSystemsService, final DatabaseStorage database ) {
+                            final DatabaseStorage database ) {
         this.accountsEvents = accountsEvents;
         this.registrationSystemsEvents = registrationSystemsEvents;
-        this.registrationSystemsService = registrationSystemsService;
         this.database = database;
     }
 
@@ -45,6 +46,19 @@ public class AccountsService {
         registrationSystemsEvents.getUpdatedEvent().fire( Arrays.asList( accountModel.getRegistrationSystem() ) );
 
         return accountModel;
+    }
+
+    public void delete( List<AccountModel> accounts ) {
+        database.transactional( em -> {
+            Query q = em.createNamedQuery( "deleteAccounts" );
+            q.setParameter( "ids", accounts.stream().map( AccountModel::getId ).collect( Collectors.toList() ) );
+
+            log.info( "Deleted {} account(s)", q.executeUpdate() );
+        } );
+
+        log.debug( "Tricker event: AccountEvents::deletedEvent" );
+        accountsEvents.getDeletedEvent().fire( accounts );
+
     }
 
     public AccountModel update( AccountModel accountModel ) throws TimeLogValidateException {
@@ -95,4 +109,5 @@ public class AccountsService {
 
         return model;
     }
+
 }

@@ -7,6 +7,7 @@ import dk.sunepoulsen.timelog.ui.model.accounts.AccountModel;
 import dk.sunepoulsen.timelog.ui.tasks.backend.ExecuteBackendServiceTask;
 import dk.sunepoulsen.timelog.ui.tasks.backend.LoadBackendServiceItemsTask;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -21,11 +22,13 @@ import lombok.extern.slf4j.XSlf4j;
 
 import java.io.IOException;
 import java.util.Optional;
+import java.util.ResourceBundle;
 
 @XSlf4j
 public class AccountsPane extends BorderPane {
     private Registry registry;
     private BackendConnection backendConnection = null;
+    private ResourceBundle bundle;
 
     @FXML
     private TableView<AccountModel> accountsView;
@@ -42,9 +45,13 @@ public class AccountsPane extends BorderPane {
     @FXML
     private Button editButton = null;
 
+    @FXML
+    private Button deleteButton = null;
+
     public AccountsPane() {
         this.registry = Registry.getDefault();
         this.backendConnection = registry.getBackendConnection();
+        this.bundle = registry.getBundle( getClass() );
 
         FXMLLoader fxmlLoader = new FXMLLoader( getClass().getResource( "accountspane.fxml" ) );
         fxmlLoader.setRoot( this );
@@ -72,19 +79,23 @@ public class AccountsPane extends BorderPane {
         } );
 
         accountsView.getSelectionModel().setSelectionMode( SelectionMode.MULTIPLE );
-        accountsView.getSelectionModel().getSelectedItems().addListener( this::updateButtonsState );
+        accountsView.getSelectionModel().getSelectedItems().addListener( this::updateButtonsListener );
 
         backendConnection.getEvents().getRegistrationSystems().getUpdatedEvent().addListener( v -> reload() );
+        backendConnection.getEvents().getAccounts().getCreatedEvent().addListener( v -> reload() );
         backendConnection.getEvents().getAccounts().getUpdatedEvent().addListener( v -> reload() );
-        backendConnection.getEvents().getAccounts().getUpdatedEvent().addListener( v -> reload() );
+        backendConnection.getEvents().getAccounts().getDeletedEvent().addListener( v -> reload() );
 
         reload();
     }
 
-    private void updateButtonsState( ListChangeListener.Change<? extends AccountModel> listener ) {
-        ObservableList<? extends AccountModel> list = listener.getList();
+    private void updateButtonsListener( ListChangeListener.Change<? extends AccountModel> listener ) {
+        updateButtonsState( listener.getList() );
+    }
 
+    private void updateButtonsState( ObservableList<? extends AccountModel> list ) {
         editButton.disableProperty().setValue( list.size() != 1 );
+        deleteButton.disableProperty().setValue( list.isEmpty() );
     }
 
     private void reload() {
@@ -101,7 +112,7 @@ public class AccountsPane extends BorderPane {
 
             log.info( "Viewing {} accounts", movies.size() );
             accountsView.setItems( movies );
-            editButton.setDisable( true );
+            updateButtonsState( FXCollections.emptyObservableList() );
         } );
 
         log.info( "Loading accounts" );
@@ -126,6 +137,11 @@ public class AccountsPane extends BorderPane {
     @FXML
     private void editButtonClicked( final ActionEvent event ) {
         showDialogAndUpdateAccount();
+    }
+
+    @FXML
+    private void deleteButtonClicked( final ActionEvent event ) {
+        confirmAndDeleteAccounts();
     }
 
     private void showDialogAndCreateAccount() {
@@ -155,5 +171,21 @@ public class AccountsPane extends BorderPane {
             );
             registry.getUiRegistry().getTaskExecutorService().submit( task );
         } );
+    }
+
+    @FXML
+    private void confirmAndDeleteAccounts() {
+        Alert alert = new Alert( Alert.AlertType.CONFIRMATION, bundle.getString( "alert.deletion.content.text" ) );
+        alert.setHeaderText( bundle.getString( "alert.deletion.header.text" ) );
+        alert.setTitle( bundle.getString( "alert.deletion.title.text" ) );
+
+        alert.showAndWait()
+            .filter( response -> response == ButtonType.OK )
+            .ifPresent( response -> {
+                ExecuteBackendServiceTask task = new ExecuteBackendServiceTask( backendConnection, connection ->
+                    connection.servicesFactory().newAccountsService().delete( accountsView.getSelectionModel().getSelectedItems() )
+                );
+                registry.getUiRegistry().getTaskExecutorService().submit( task );
+            } );
     }
 }
