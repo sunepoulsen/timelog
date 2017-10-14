@@ -3,6 +3,9 @@ package dk.sunepoulsen.timelog.db.entities;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.Set;
+
+import static javax.persistence.CascadeType.ALL;
 
 @Data
 @Entity
@@ -30,4 +33,7 @@ public class AccountEntity {
 
     @Column( name = "description" )
     private String description;
+
+    @OneToMany( cascade = ALL, fetch = FetchType.LAZY, mappedBy = "account" )
+    private Set<TimeLogEntity> timelogs;
 }

@@ -6,6 +6,7 @@
         <class>dk.sunepoulsen.timelog.db.entities.AgreementEntity</class>
         <class>dk.sunepoulsen.timelog.db.entities.HolidayEntity</class>
         <class>dk.sunepoulsen.timelog.db.entities.RegistrationSystemEntity</class>
+        <class>dk.sunepoulsen.timelog.db.entities.TimeLogEntity</class>
 
         <properties>
             <property name="javax.persistence.jdbc.driver" value="org.h2.Driver" />
