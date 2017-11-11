@@ -12,8 +12,12 @@ public class MacOS implements OperatingSystem {
 
     private Properties settings;
 
-    public MacOS() throws IOException {
+    MacOS() throws IOException {
         loadSettings();
+    }
+
+    static boolean matchOperatingSystemName( String osName ) {
+        return osName.equals( "Mac OS X" );
     }
 
     @Override
@@ -29,4 +33,5 @@ public class MacOS implements OperatingSystem {
         this.settings = new Properties();
         this.settings.load( getClass().getResourceAsStream( "/application.properties" ) );
     }
+
 }
