@@ -9,11 +9,14 @@ import javafx.scene.Scene;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+import java.util.Locale;
+
 public class TimelogApplication extends Application {
     private Registry registry = Registry.getDefault();
 
     @Override
     public void start( final Stage primaryStage ) throws Exception {
+        Locale.setDefault( Locale.US );
         registry.initialize( primaryStage );
 
         FXMLLoader loader = new FXMLLoader( MainWindow.class.getResource( "mainwindow.fxml" ) );
