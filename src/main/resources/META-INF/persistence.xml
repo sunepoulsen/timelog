@@ -7,15 +7,5 @@
         <class>dk.sunepoulsen.timelog.db.entities.HolidayEntity</class>
         <class>dk.sunepoulsen.timelog.db.entities.RegistrationSystemEntity</class>
         <class>dk.sunepoulsen.timelog.db.entities.TimeLogEntity</class>
-
-        <properties>
-            <property name="javax.persistence.jdbc.driver" value="org.h2.Driver" />
-            <property name="javax.persistence.jdbc.url"    value="jdbc:h2:~/Library/Application Support/TimeLog/${project.version}/data" />
-            <property name="javax.persistence.jdbc.user" value="sa" />
-            <property name="javax.persistence.jdbc.password" value="" />
-            <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
-            <property name="show_sql" value="true"/>
-            <property name="hibernate.temp.use_jdbc_metadata_defaults" value="false"/>
-        </properties>
     </persistence-unit>
 </persistence>

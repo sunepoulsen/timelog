@@ -3,6 +3,7 @@ package dk.sunepoulsen.timelog.backend;
 import dk.sunepoulsen.timelog.backend.events.BackendConnectionEvents;
 import dk.sunepoulsen.timelog.backend.services.ServicesFactory;
 import dk.sunepoulsen.timelog.db.storage.DatabaseStorage;
+import dk.sunepoulsen.timelog.db.storage.DatabaseStorageSettings;
 import liquibase.exception.LiquibaseException;
 import lombok.Getter;
 import lombok.extern.slf4j.XSlf4j;
@@ -35,8 +36,8 @@ public class BackendConnection {
     @Getter
     private BackendConnectionEvents events;
 
-    public BackendConnection() {
-        this.database = new DatabaseStorage();
+    public BackendConnection( DatabaseStorageSettings databaseStorageSettings ) {
+        this.database = new DatabaseStorage( "timelog", databaseStorageSettings );
         this.events = new BackendConnectionEvents();
     }
 

@@ -17,8 +17,9 @@ import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Properties;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -28,17 +29,22 @@ import java.util.function.Function;
  */
 @XSlf4j
 public class DatabaseStorage {
-    public DatabaseStorage() {
-        this( PERSISTENCE_NAME, PROPERTIES_FILENAME );
-    }
-
-    public DatabaseStorage( String persistenceName, String propertiesFilename ) {
+    public DatabaseStorage( String persistenceName, DatabaseStorageSettings settings ) {
         this.persistenceName = persistenceName;
-        this.propertiesFilename = propertiesFilename;
+        this.settings = settings;
     }
 
     public void connect() {
-        this.emf = Persistence.createEntityManagerFactory( persistenceName );
+        Map<String, String> properties = new HashMap<>();
+        properties.put( "javax.persistence.jdbc.driver", settings.getDriver() );
+        properties.put( "javax.persistence.jdbc.url", settings.getUrl() );
+        properties.put( "javax.persistence.jdbc.user", settings.getUsername() );
+        properties.put( "javax.persistence.jdbc.password", settings.getPassword() );
+        properties.put( "hibernate.dialect", settings.getHibernateDialect() );
+        properties.put( "show_sql", settings.getShowSql().toString() );
+        properties.put( "hibernate.temp.use_jdbc_metadata_defaults", settings.getHibernateUseJdbcMetadataDefaults().toString() );
+
+        this.emf = Persistence.createEntityManagerFactory( persistenceName, properties );
     }
 
     public void disconnect() {
@@ -52,9 +58,6 @@ public class DatabaseStorage {
     }
 
     public void migrate() throws IOException, SQLException, LiquibaseException {
-        Properties settings = new Properties();
-        settings.load( getClass().getResourceAsStream( propertiesFilename ) );
-
         log.info( "Supported JDBC drivers:" );
         Enumeration<Driver> drivers = DriverManager.getDrivers();
         while( drivers.hasMoreElements() ) {
@@ -62,9 +65,9 @@ public class DatabaseStorage {
             log.info( driver.getClass().getName() );
         }
 
-        String url = settings.getProperty( "liquibase.datasource.url" );
-        String username = settings.getProperty( "liquibase.datasource.username" );
-        String password = settings.getProperty( "liquibase.datasource.password" );
+        String url = settings.getUrl();
+        String username = settings.getUsername();
+        String password = settings.getPassword();
 
         try( Connection connection = DriverManager.getConnection( url, username, password ) ) {
             Database database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation( new JdbcConnection( connection ) );
@@ -204,10 +207,7 @@ public class DatabaseStorage {
     //              Private members
     //-------------------------------------------------------------------------
 
-    private static final String PERSISTENCE_NAME = "timelog";
-    private static final String PROPERTIES_FILENAME = "/application.properties";
-
     private final String persistenceName;
-    private final String propertiesFilename;
+    private final DatabaseStorageSettings settings;
     private EntityManagerFactory emf;
 }

@@ -2,6 +2,7 @@ package dk.sunepoulsen.it.timelog.db.storage
 
 import dk.sunepoulsen.timelog.db.entities.AgreementEntity
 import dk.sunepoulsen.timelog.db.storage.DatabaseStorage
+import dk.sunepoulsen.timelog.db.storage.DatabaseStorageSettings
 import org.junit.After
 import org.junit.Before
 import org.junit.BeforeClass
@@ -18,13 +19,13 @@ class DatabaseStorageIT {
 
     @BeforeClass
     static void migrateDatabase() {
-        DatabaseStorage database = new DatabaseStorage( "timelog-integration-tests", "/application-test.properties" )
+        DatabaseStorage database = new DatabaseStorage( "timelog", DatabaseStorageSettings.createInstanceFromPropertyResource( "/application-test.properties" ) )
         database.migrate()
     }
 
     @Before
     void initDatabaseStorage() {
-        databaseStorage = new DatabaseStorage( "timelog-integration-tests", "/application-test.properties" )
+        databaseStorage = new DatabaseStorage( "timelog", DatabaseStorageSettings.createInstanceFromPropertyResource( "/application-test.properties" ) )
         databaseStorage.connect()
         databaseStorage.deleteAllData()
     }
