@@ -3,6 +3,7 @@ package dk.sunepoulsen.it.timelog.backend.services
 import dk.sunepoulsen.timelog.backend.events.RegistrationSystemsEvents
 import dk.sunepoulsen.timelog.backend.services.RegistrationSystemsService
 import dk.sunepoulsen.timelog.db.storage.DatabaseStorage
+import dk.sunepoulsen.timelog.db.storage.DatabaseStorageSettings
 import dk.sunepoulsen.timelog.ui.model.registration.systems.RegistrationSystemModel
 import org.junit.After
 import org.junit.Before
@@ -14,13 +15,13 @@ class RegistrationSystemsServiceIT {
 
     @BeforeClass
     static void migrateDatabase() {
-        DatabaseStorage database = new DatabaseStorage( "timelog-integration-tests", "/application-test.properties" )
+        DatabaseStorage database = new DatabaseStorage( "timelog", DatabaseStorageSettings.createInstanceFromPropertyResource( "/application-test.properties" ) )
         database.migrate()
     }
 
     @Before
     void initDatabaseStorage() {
-        databaseStorage = new DatabaseStorage( "timelog-integration-tests", "/application-test.properties" )
+        databaseStorage = new DatabaseStorage( "timelog", DatabaseStorageSettings.createInstanceFromPropertyResource( "/application-test.properties" ) )
         databaseStorage.connect()
         databaseStorage.deleteAllData()
     }
